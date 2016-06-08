@@ -1,0 +1,249 @@
+﻿Step 1: Create an Empty Mvc template with the name PartyIvitees
+step 2 : Run the projuct " Coplains error 404"
+step 3 : Ade a HomeController to the Controller folder.
+step 4:  Return a "string: Hello_World" with the Index Method and Run Agian 
+step 5:  Create a rendering view("Chage the return string to a return ActionView") and run.
+step 6:  Returns  Error(he view 'Index' or its master was not found or no view engine supports the searched locations);
+step 7:  Add a view(To create a view, right-click the action method in the HomeController.cs code file (either on the method name or inside the method body) and select Add View from the pop-up menu)
+step 8: Add a message (Hello, world (from the view)) to the index.cshtml view
+
+We can return other results from action methods besides strings and 
+ViewResult objects. For example, if we return a RedirectResult, we cause 
+the browser to be redirected to another URL. If we return an HttpUnauthorizedResult, 
+we force the user to log in. These objects are collectively known as action results, 
+and they are all derived from the ActionResult class. The action result system lets us 
+encapsulate and reuse common responses in actions. 
+
+Step 9: Add a dynamic output using (ViewBag object to render data to our view)
+
+step 10: Add this little piece of code (int hour = DateTime.Now.Hour;
+            ViewBag.greetings = (hour < 12) ? "Good Morning" : "Good Afternoon";).
+
+step 11: Retrieve the VIewBag Data through the view..
+
+step 12: Add this little piece of code o view ( @ViewBag.greetings,World(From the view))
+-------------------------------------------------------------------------------------------------
+Setting the Scene 
+We are going to imagine that a friend has decided to host a New Year’s Eve party 
+and that she has asked us to create a web site that allows her invitees to electronically 
+RSVP. She has asked for four key features: 
+• A home page that shows information about the party 
+• A form that can be used to RSVP 
+• Validation for the RSVP form, which will display a thank-you page  
+• RSVPs e-mailed to the party host when complete 
+-------------------------------------------------------------------------------------------------
+In the following sections, we’ll build up the MVC project we created at the 
+start of the chapter and add these features. 
+We can knock the first item off the list by 
+applying what we covered earlier—we can add some HTML to our existing 
+view that gives details of the party.
+
+...................................................................................................
+step 12: Add an additional message to the view:
+<p>We're going to have an exciting party.<br />        
+(To do: sell it better. Add pictures or something.)        
+</p>   
+
+step 12: Designing a Data Model 
+----------------------------------------------------------------------------------------------------
+
+In MVC, the M stands for model, and it is the most important part of the application. 
+The model is the representation of the real-world objects, processes, and rules that define
+ the subject, known as the domain, of our application. The model, often referred 
+ to as a domain model, contains the C# objects (known as domain objects) 
+ that make up the universe of our application and the methods that let us manipulate them.
+  The views and controllers then expose the domain to our clients in a consistent manner.
+   A well-designed MVC application starts with a well-designed model, which is then the focal 
+   point as we add controllers and views.  
+----------------------------------------------------------------------------------------------------
+
+step 13: Add a meodel class called  GuestResponse in the Model Folder with the properties:
+public string Name,Email,PhoneNumber{get; set}
+public bool? WillAttend {get; set;}
+
+
+step 13: Add RSVP Action Link to the index view of Home controller. This will help us to Navigate to RSVP 
+form page.( @Html.ActionLink("RSVP Now", "RsvpForm"))
+-----------------------------------------------------------------------------------------------
+Html.ActionLink is an HTML helper method. 
+The MVC Framework comes with a collection of builtin 
+helper methods that are convenient for rendering HTML links,
+ text inputs, checkboxes, selections, and even custom controls. 
+ The ActionLink method takes two parameters: the first is the text to 
+ display in the link, and the second is the action to perform when the user clicks the link. 
+ --------------------------------------------------------------------------------------------
+ step 14: Click the link: (Error 404);
+ step 15: Add RSVPForm Ation to Home controller
+ step 16: Add a Strongly Typed View 
+ ---------------------------------------------------------------------------------------------
+ We are going to add a view for our RsvpForm action method, but 
+ we are going to do something slightly different—we are going to create 
+ a strongly typed view. A strongly typed view is intended to render a specific
+  domain type, and if we specify the type we want to work with (GuestResponse in this example),
+   MVC can create some helpful shortcuts to make it easier.
+   
+   Caution Before doing anything else, make sure your MVC project is compiled.
+    If you have created the GuestResponse class but not compiled it, MVC won’t be able to 
+	create a strongly typed view for this type. To compile your application, select Build 
+	Solution from the Visual Studio Build menu.
+
+	Right-click inside the RsvpForm action method and choose Add View from the pop-up menu 
+	to create the view. In the Add View dialog, check the Create a strongly-typed view option 
+	and select GuestResponse from the drop-down menu. Uncheck Use a layout or master page and 
+	ensure that Razor is selected as the view engine and that the Scaffold template option is
+	 set to Empty.
+
+------------------------------------------------------------------------------------------
+step 17: Build all.. first before adding a strongly typed view
+
+step 18: Add a form with the help of our strongly stype model added to our view using :
+ @using (Html.BeginForm())
+        {
+            <p> Your Name: @Html.TextBoxFor(x => x.Name)</p>
+            <p> Your Name: @Html.TextBoxFor(x => x.Email)</p>
+            <p> Your Name: @Html.TextBoxFor(x => x.PhoneNumber)</p>
+            <p>
+                Will you attend?
+                @Html.DropDownListFor(x => x.WillAttend, new[] {new SelectListItem()
+                {Text = "Yes, I'll be there", Value = bool.TrueString},
+                new SelectListItem(){Text = "Yes, I'll be there", Value = bool.FalseString}})
+
+            </p>
+                <input type="submit" value="Submit RSVP" />
+        }
+
+-------------------------------------------------------------------------------------------------
+
+ For each property of the GuestResponse model class, 
+ we use an HTML helper method to render a suitable HTML input control. 
+ These methods let you select the property that the input element relates to using a 
+ lambda expression, like this: @Html.TextBoxFor(x => x.Phone).
+
+ The HTML helper method generates the HTML that creates an input element, 
+ sets the type parameter to text, and sets the id and name attributes to Phone,
+  the name of the selected domain class property, as follows:
+   <input id="Phone" name="Phone" type="text" value="" />  
+This handy feature works because our RsvpForm view is strongly 
+typed, and we have told MVC that GuestResponse is the type that we 
+want to render with this view.  An alternative to using lambda expressions 
+is to refer to name of the model type property as a string, like this: @Html.TextBox("Email")  
+We find that the lambda expression technique prevents us from mistyping the name of the model
+ type property. This is because Visual Studio IntelliSense pops up and lets us pick the property 
+ automatically
+
+ -----------------------------------------------------------------------------------------------
+ Another convenient helper method is Html.BeginForm, 
+ which generates an HTML form element configured to postback to the action method. 
+ Since we haven’t passed any parameters to the helper method, it assumes we want to 
+ postback to the same URL. A neat trick is to wrap this in a C# using statement, like this:  
+ @using (Html.BeginForm()) {     ...form contents go here... } 
+ Normally, when applied like this, the using statement ensures that an object is disposed 
+ of when it goes out of scope. It is commonly used for database connections, for example,
+  to make sure that they are closed as soon as a query has completed. 
+  (This application of the using keyword is different from the kind that 
+  brings classes in a namespace into scope in a class.) Instead of disposing of 
+  an object, the HtmlBeginForm helper closes the HTML form element when it goes
+   out of scope. This means that the Html.BeginForm helper method creates both parts 
+   of a form element, like this: 
+   <form action="/Home/RsvpForm" method="post">     
+   ...form contents go here... </form>  
+-----------------------------------------------------------------------------------------------------
+
+step 19:Build and run the project.
+
+---------------------------------------------------------------------------------------------------
+
+Handling Forms :
+We haven’t told MVC what we want to do when the form is posted to the server. As things stand, 
+clicking the Submit RSVP button just clears any values you’ve entered into the form. That’s 
+because the form posts back to the RsvpForm action method in the Home controller, which just 
+tells MVC to render the view again. 
+-------------------------------------------------------------------------------------------------
+
+To receive and process submitted form data, we’re going to do a clever thing. 
+We will add a second RsvpForm action method in order to create the following:
+ • A method that responds to HTTP GET requests: A GET request is what a browser
+  issues normally each time someone clicks a link. This version of the action will be 
+  responsible for displaying the initial blank form when someone first visits /Home/RsvpForm. 
+
+ • A method that responds to HTTP POST requests: By default, forms rendered using
+  Html.BeginForm() are submitted by the browser as a POST request. This version 
+  of the action will be responsible for receiving submitted data and deciding what 
+  to do with it. 
+  ----------------------------------------------------------------------------------------
+  step 19: Add a post and a get method of RSVP to home controller
+  Step 20: Use Data binding in RSVP Getters Method by passing in GuestResponse class as a pararameter. 
+  and reutn to view "Thanks", the object of that parameter.
+  return View("Thanks", guestResponse); 
+
+   [HttpPost]
+        public ViewResult RsvpForm(GuestResponse guestResponse)
+        {
+             // TODO: Email guestResponse to the part organizer 
+            return View("Thanks",guestResponse);
+        }
+  .........................................................................................
+   This call to the View method tells MVC to find and render a view called Thanks and to pass 
+   our GuestResponse object to the view. To create the view we’ve specified, right-click inside 
+   one of the HomeController methods and select Add View from the pop-up menu
+   ...............................................................................................
+
+    Step 20: Create an empty view "Thanks".. In the view get the user Name and Decition to attend like this
+	<h1>Thank you, @Model.Name!</h1>         
+	@if (Model.WillAttend == true) 
+	{             
+		@:It's great that you're coming. The drinks are already in the fridge!         
+		} else 
+		{ 
+		@:Sorry to hear that you can't make it, but thanks for letting us know.     
+		    }
+
+    Step 21: Run the project and add data to the form and submmit
+	......................................................................................
+	
+	Adding validation:
+	We are now in a position to add validation to our application. 
+	If we didn’t do this, our users could enter nonsense data or even submit an empty form.  
+	In an MVC application, validation is typically applied in the domain model, rather than 
+	in the user interface. This means that we define our validation criteria in one place,
+	and it takes effect in any place the model class is used. ASP.NET MVC supports declarative 
+	validation rules defined with attributes from the System.ComponentModel.DataAnnotations
+    namespace. Listing 3-13 shows how these attributes can be applied to the GuestResponse 
+	model class.
+	
+.............................................................................................	 
+
+ Step 22: Add validation to the class GuestReponse properties.(DataAnnotation.)
+ step 23: Validate ModelState.Isvalid return view "thanks" else display error message in the {HTTPOST}
+
+ ...............................................................................................
+ If there are no validation errors, we tell MVC to render the Thanks view as we did previously. 
+ If there are validation errors, we rerender the RsvpForm view by calling the View method without 
+ any parameters. We need to display the validation errors to the user, and we can do this by using
+ the Html.ValidationSummary helper method in the RsvpForm view.
+ -------------------------------------------------------------------------------------------------
+
+ step 24: Add Html.ValidationSummary in the RSVP form View:
+ <body>     @using (Html.BeginForm())
+  {                
+   @Html.ValidationSummary()        
+    <p>Your name: @Html.TextBoxFor(x => x.Name) 
+ </p>         
+ <p>Your email: @Html.TextBoxFor(x => x.Email)</p> 
+ ------------------------------------------------------------------------------------
+ If there are no errors, the Html.ValidationSummary method creates a hidden list item 
+ as a placeholder in the form. MVC makes the placeholder visible and adds the error messages 
+ defined by the validation attributes
+ -------------------------------------------------------------------------------------
+  step 24: Build and run the project.
+  ------------------------------------------------------------------------------------
+  
+  Highlighting Invalid Fields The HTML helper methods that create text boxes, 
+  drop-downs, and other elements have a very handy feature that can be used
+   in conjunction with model binding. The same mechanism that preserves the data 
+   that a user entered in a form can also be used to highlight individual fields 
+   that failed the validation checks.  When a model class property has failed validation,
+    the HTML helper methods will generate slightly different HTML. As an example,
+ here is the HTML that a call to Html.TextBoxFor(x => x.Name) generates when
+ there is no validation error: 
+  <input data-val="true" data-val-required="Please enter your name" id="Name" name="Name"  type="text" value="" /> 
